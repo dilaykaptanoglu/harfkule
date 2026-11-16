@@ -1,0 +1,32 @@
+export const colors = {
+  bg0: '#041C22',
+  bg1: '#0A343C',
+  bg2: '#124A52',
+  mist: '#7EC8B8',
+  mistDim: 'rgba(126, 200, 184, 0.22)',
+  gold: '#E8C468',
+  goldDeep: '#C9952E',
+  tileFace: '#F3E6C4',
+  tileEdge: '#D4C19A',
+  ink: '#1A1510',
+  inkSoft: '#4A4034',
+  cream: '#F7F1E3',
+  danger: '#E06B5C',
+  success: '#3FAE7C',
+  tws: '#C45C4A',
+  dws: '#D9897A',
+  tls: '#3A8F7A',
+  dls: '#6BA8C9',
+  board: '#1B5A55',
+  boardLine: 'rgba(247, 241, 227, 0.12)',
+  overlay: 'rgba(4, 28, 34, 0.82)',
+};
+
+export const spacing = {
+  xs: 4,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 24,
+  xxl: 32,
+};
