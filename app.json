@@ -17,7 +17,8 @@
       "bundleIdentifier": "com.harfkule.app",
       "buildNumber": "1",
       "infoPlist": {
-        "CFBundleDisplayName": "HarfKule"
+        "CFBundleDisplayName": "HarfKule",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -47,6 +48,7 @@
       "eas": {
         "projectId": "b1abecf9-e549-4318-bc37-5184abd38acc"
       }
-    }
+    },
+    "owner": "dilaykaptanoglus-team"
   }
 }
