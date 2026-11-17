@@ -31,6 +31,12 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "dilaykaptanoglu@gmail.com",
+        "ascAppId": "6835904074",
+        "appleTeamId": "655FK2G2Y5"
+      }
+    }
   }
 }
