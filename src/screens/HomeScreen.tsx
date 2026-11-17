@@ -14,10 +14,12 @@ import { colors, spacing } from '../theme/theme';
 const nativeDriver = Platform.OS !== 'web';
 
 type Props = {
-  onStart: (names: [string, string]) => void;
+  onStartLocal: (names: [string, string]) => void;
+  onOnline: () => void;
+  onlineLabel?: string | null;
 };
 
-export function HomeScreen({ onStart }: Props) {
+export function HomeScreen({ onStartLocal, onOnline, onlineLabel }: Props) {
   const [p1, setP1] = React.useState('Oyuncu 1');
   const [p2, setP2] = React.useState('Oyuncu 2');
   const float = useRef(new Animated.Value(0)).current;
@@ -44,7 +46,18 @@ export function HomeScreen({ onStart }: Props) {
       </Animated.View>
 
       <Animated.View style={[styles.panel, { opacity: fade }]}>
-        <Text style={styles.label}>Yerel 2 oyunculu</Text>
+        <Text style={styles.label}>Çevrimiçi arkadaşlarla</Text>
+        <Pressable
+          style={({ pressed }) => [styles.cta, pressed && { opacity: 0.9 }]}
+          onPress={onOnline}
+        >
+          <Text style={styles.ctaText}>
+            {onlineLabel ? `Lobi · ${onlineLabel}` : 'Çevrimiçi oyna'}
+          </Text>
+        </Pressable>
+        <Text style={styles.hint}>Kullanıcı adıyla buluş · sıra sıra sunucuda</Text>
+
+        <Text style={[styles.label, { marginTop: spacing.xl }]}>Yerel 2 oyunculu</Text>
         <TextInput
           style={styles.input}
           value={p1}
@@ -60,12 +73,12 @@ export function HomeScreen({ onStart }: Props) {
           placeholderTextColor="rgba(247,241,227,0.4)"
         />
         <Pressable
-          style={({ pressed }) => [styles.cta, pressed && { opacity: 0.9 }]}
-          onPress={() => onStart([p1.trim() || 'Oyuncu 1', p2.trim() || 'Oyuncu 2'])}
+          style={({ pressed }) => [styles.secondary, pressed && { opacity: 0.9 }]}
+          onPress={() => onStartLocal([p1.trim() || 'Oyuncu 1', p2.trim() || 'Oyuncu 2'])}
         >
-          <Text style={styles.ctaText}>Oyuna Başla</Text>
+          <Text style={styles.secondaryText}>Yerel oyuna başla</Text>
         </Pressable>
-        <Text style={styles.hint}>Aynı cihazda sıra sıra oynayın · hesap gerekmez</Text>
+        <Text style={styles.hint}>Aynı cihazda sıra sıra · hesap gerekmez</Text>
       </Animated.View>
     </LinearGradient>
   );
@@ -79,7 +92,7 @@ const styles = StyleSheet.create({
   },
   glow: {
     position: 'absolute',
-    top: '18%',
+    top: '14%',
     alignSelf: 'center',
     width: 280,
     height: 280,
@@ -87,12 +100,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(232,196,104,0.12)',
   },
   hero: {
-    marginBottom: spacing.xxl,
+    marginBottom: spacing.xl,
   },
   brand: {
     fontFamily: 'Fraunces_700Bold',
-    fontSize: 64,
-    lineHeight: 68,
+    fontSize: 58,
+    lineHeight: 62,
     color: colors.gold,
     letterSpacing: -1.5,
   },
@@ -128,7 +141,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   cta: {
-    marginTop: spacing.sm,
     backgroundColor: colors.gold,
     borderRadius: 14,
     paddingVertical: 16,
@@ -139,8 +151,22 @@ const styles = StyleSheet.create({
     color: colors.ink,
     fontSize: 17,
   },
-  hint: {
+  secondary: {
     marginTop: spacing.sm,
+    borderRadius: 14,
+    paddingVertical: 14,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(126,200,184,0.4)',
+    backgroundColor: 'rgba(247,241,227,0.06)',
+  },
+  secondaryText: {
+    fontFamily: 'DMSans_700Bold',
+    color: colors.cream,
+    fontSize: 16,
+  },
+  hint: {
+    marginTop: 2,
     textAlign: 'center',
     fontFamily: 'DMSans_400Regular',
     color: 'rgba(247,241,227,0.55)',

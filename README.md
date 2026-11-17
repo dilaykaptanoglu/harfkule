@@ -1,30 +1,46 @@
 # HarfKule
 
-Türkçe Scrabble / Kelimelik tarzı harf oyunu. Expo (React Native) ile iOS App Store hedefiyle geliştirilen yerel 2 oyunculu (pass-and-play) MVP.
+Türkçe Scrabble / Kelimelik tarzı harf oyunu. Expo (React Native) ile iOS App Store hedefi; yerel pass-and-play + kullanıcı adıyla çevrimiçi arkadaş maçı.
 
 ## Çalıştırma
 
+### API (çevrimiçi)
+
 ```bash
-cd ~/harfkule   # veya proje dizininiz
+cd ~/harfkule/server
 npm install
+npm start          # http://0.0.0.0:8787
+npm run smoke      # iki kullanıcı + KİTAP hamlesi
+```
+
+### Expo uygulaması
+
+```bash
+cd ~/harfkule
+npm install
+# İsteğe bağlı: export EXPO_PUBLIC_API_URL=http://<LAN-IP>:8787
 npx expo start
 ```
 
-- Telefonda: Expo Go ile QR kodu okutun (aynı ağ).
-- Web önizleme: `npx expo start --web`
-- iOS simülatör (macOS): `npx expo start --ios`
+İki istemci (arkadaş maçı demosu):
 
-Typecheck:
+1. API’yi başlatın.
+2. İki tarayıcı / iki Expo Go oturumu açın (veya biri web, biri telefon).
+3. Her birinde **Çevrimiçi oyna** → benzersiz kullanıcı adı.
+4. Biri diğerini tam kullanıcı adıyla arasın → **Ekle** / **Meydan oku**; diğeri daveti **Kabul** etsin.
+
+- Telefonda: Expo Go QR; API için `EXPO_PUBLIC_API_URL` makinenizin LAN IP’si olmalı.
+- Web: `npx expo start --web` (varsayılan API `http://127.0.0.1:8787`).
+
+Typecheck / smoke:
 
 ```bash
 npx tsc --noEmit
-```
-
-Oyun mantığı duman testi:
-
-```bash
 npm run smoke
+npm run api:smoke
 ```
+
+Ayrıntılı çevrimiçi notlar: proje store’daki `docs/harfkule-multiplayer.md`.
 
 ## Oynanış (MVP)
 
@@ -65,10 +81,11 @@ Apple Developer Program kaydı tamamlandığında:
 
 Bu repoda henüz uzak GitHub yok; bağlayınca CI + EAS tetiklenebilir.
 
-## TODO (MVP dışı)
+## TODO
 
-- [ ] Çevrimiçi çok oyunculu (arkadaş daveti)
-- [ ] Hesaplar / sıralama
+- [x] Çevrimiçi 2O (kullanıcı adı, arkadaş, davet, kalıcı oyun, poll)
+- [ ] Anlık WebSocket / push bildirim
+- [ ] Sıralama / hesap kurtarma (e-posta)
 - [ ] IAP
 - [ ] Resmi / net lisanslı turnuva sözlüğü
 - [ ] EAS projectId + Apple kimlik bilgileri
@@ -78,9 +95,15 @@ Bu repoda henüz uzak GitHub yok; bağlayınca CI + EAS tetiklenebilir.
 
 ```
 App.tsx
+server/            # Express + SQLite API
+src/api/           # istemci HTTP + oturum
 src/game/          # torba, tahta, kurallar, motor
 src/components/    # tahta, raf, taş UI
-src/screens/       # menü + oyun
+src/screens/       # menü, yerel, lobi, çevrimiçi oyun
 assets/data/       # turkish-words.json
 eas.json           # EAS iskeleti
 ```
+
+## Production hosting (sonra)
+
+SQLite dosyasını Postgres’e taşıyıp API’yi Railway / Fly.io / Render’da çalıştırın; `PORT` + kalıcı volume/DB; istemcide `EXPO_PUBLIC_API_URL` production URL. EAS build App Store için ayrı adım.
