@@ -13,10 +13,10 @@ COPY tsconfig.json ./
 COPY src ./src
 
 ENV NODE_ENV=production
+# Render injects PORT at runtime; 8787 is local/Docker default only
 ENV PORT=8787
 ENV DATA_DIR=/data
 RUN mkdir -p /data
 
 EXPOSE 8787
-VOLUME ["/data"]
 CMD ["npx", "tsx", "src/index.ts"]

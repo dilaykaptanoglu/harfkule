@@ -1,7 +1,7 @@
-# Render Blueprint — connect this GitHub repo in https://dashboard.render.com
-# New → Blueprint → select dilaykaptanoglu/harfkule
-# After deploy, copy the service URL (https://harfkule-api.onrender.com) into
-# eas.json EXPO_PUBLIC_API_URL and rebuild iOS.
+# Render Blueprint (free web service — ephemeral SQLite; no persistent disk on free)
+# Dashboard: New → Blueprint → repo dilaykaptanoglu/harfkule
+# Branch: cursor/testflight-keyboard-api-839c (until merged) or main
+# After deploy, copy https://harfkule-api.onrender.com into eas.json EXPO_PUBLIC_API_URL
 
 services:
   - type: web
@@ -13,13 +13,8 @@ services:
     dockerContext: ./server
     healthCheckPath: /health
     envVars:
-      - key: PORT
-        value: "8787"
-      - key: DATA_DIR
-        value: /data
       - key: NODE_ENV
         value: production
-    disk:
-      name: harfkule-data
-      mountPath: /data
-      sizeGB: 1
+      - key: DATA_DIR
+        value: /data
+      # Do not set PORT — Render injects it; app reads process.env.PORT
