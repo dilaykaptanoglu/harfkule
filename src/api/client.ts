@@ -1,4 +1,4 @@
-import { API_URL } from './config';
+import { API_URL, API_URL_UNCONFIGURED } from './config';
 import type { Session } from './session';
 import type { OnlineGameView } from '../game/onlineView';
 import type { PendingPlacement } from '../game/types';
@@ -15,15 +15,30 @@ async function request<T>(
   path: string,
   opts: { method?: string; body?: unknown; token?: string } = {},
 ): Promise<T> {
+  if (API_URL_UNCONFIGURED && !__DEV__) {
+    throw new ApiError(
+      0,
+      'Çevrimiçi API adresi henüz ayarlanmadı. Yerel oyun çevrimdışı çalışır.',
+    );
+  }
+
   const headers: Record<string, string> = { Accept: 'application/json' };
   if (opts.body !== undefined) headers['Content-Type'] = 'application/json';
   if (opts.token) headers.Authorization = `Bearer ${opts.token}`;
 
-  const res = await fetch(`${API_URL}${path}`, {
-    method: opts.method || 'GET',
-    headers,
-    body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API_URL}${path}`, {
+      method: opts.method || 'GET',
+      headers,
+      body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
+    });
+  } catch {
+    throw new ApiError(
+      0,
+      'Sunucuya ulaşılamadı. İnternet bağlantını kontrol et veya yerel oyunu dene.',
+    );
+  }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     throw new ApiError(res.status, data.error || `İstek başarısız (${res.status})`);

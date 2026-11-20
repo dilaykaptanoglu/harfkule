@@ -1,0 +1,25 @@
+# Render Blueprint — connect this GitHub repo in https://dashboard.render.com
+# New → Blueprint → select dilaykaptanoglu/harfkule
+# After deploy, copy the service URL (https://harfkule-api.onrender.com) into
+# eas.json EXPO_PUBLIC_API_URL and rebuild iOS.
+
+services:
+  - type: web
+    name: harfkule-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: "8787"
+      - key: DATA_DIR
+        value: /data
+      - key: NODE_ENV
+        value: production
+    disk:
+      name: harfkule-data
+      mountPath: /data
+      sizeGB: 1

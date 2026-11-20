@@ -29,6 +29,7 @@
         "EXPO_PUBLIC_API_URL": "https://TODO_HOSTED_API_URL"
       }
     }
+
   },
   "submit": {
     "production": {

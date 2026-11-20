@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import {
   Animated,
+  Keyboard,
+  KeyboardAvoidingView,
   Platform,
   Pressable,
   StyleSheet,
@@ -38,53 +40,69 @@ export function HomeScreen({ onStartLocal, onOnline, onlineLabel }: Props) {
   const translateY = float.interpolate({ inputRange: [0, 1], outputRange: [0, -10] });
 
   return (
-    <LinearGradient colors={[colors.bg0, colors.bg1, '#163E2F']} style={styles.root}>
-      <View style={styles.glow} />
-      <Animated.View style={[styles.hero, { opacity: fade, transform: [{ translateY }] }]}>
-        <Text style={styles.brand}>HarfKule</Text>
-        <Text style={styles.tagline}>Türkçe harf kulesini birlikte yükseltin.</Text>
-      </Animated.View>
+    <KeyboardAvoidingView
+      style={styles.flex}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <LinearGradient colors={[colors.bg0, colors.bg1, '#163E2F']} style={styles.flex}>
+        <Pressable style={styles.root} onPress={Keyboard.dismiss} accessible={false}>
+          <View style={styles.glow} />
+          <Animated.View style={[styles.hero, { opacity: fade, transform: [{ translateY }] }]}>
+            <Text style={styles.brand}>HarfKule</Text>
+            <Text style={styles.tagline}>Türkçe harf kulesini birlikte yükseltin.</Text>
+          </Animated.View>
 
-      <Animated.View style={[styles.panel, { opacity: fade }]}>
-        <Text style={styles.label}>Çevrimiçi arkadaşlarla</Text>
-        <Pressable
-          style={({ pressed }) => [styles.cta, pressed && { opacity: 0.9 }]}
-          onPress={onOnline}
-        >
-          <Text style={styles.ctaText}>
-            {onlineLabel ? `Lobi · ${onlineLabel}` : 'Çevrimiçi oyna'}
-          </Text>
-        </Pressable>
-        <Text style={styles.hint}>Kullanıcı adıyla buluş · sıra sıra sunucuda</Text>
+          <Animated.View style={[styles.panel, { opacity: fade }]}>
+            <Text style={styles.label}>Çevrimiçi arkadaşlarla</Text>
+            <Pressable
+              style={({ pressed }) => [styles.cta, pressed && { opacity: 0.9 }]}
+              onPress={onOnline}
+            >
+              <Text style={styles.ctaText}>
+                {onlineLabel ? `Lobi · ${onlineLabel}` : 'Çevrimiçi oyna'}
+              </Text>
+            </Pressable>
+            <Text style={styles.hint}>Kullanıcı adıyla buluş · sıra sıra sunucuda</Text>
 
-        <Text style={[styles.label, { marginTop: spacing.xl }]}>Yerel 2 oyunculu</Text>
-        <TextInput
-          style={styles.input}
-          value={p1}
-          onChangeText={setP1}
-          placeholder="Oyuncu 1"
-          placeholderTextColor="rgba(247,241,227,0.4)"
-        />
-        <TextInput
-          style={styles.input}
-          value={p2}
-          onChangeText={setP2}
-          placeholder="Oyuncu 2"
-          placeholderTextColor="rgba(247,241,227,0.4)"
-        />
-        <Pressable
-          style={({ pressed }) => [styles.secondary, pressed && { opacity: 0.9 }]}
-          onPress={() => onStartLocal([p1.trim() || 'Oyuncu 1', p2.trim() || 'Oyuncu 2'])}
-        >
-          <Text style={styles.secondaryText}>Yerel oyuna başla</Text>
+            <Text style={[styles.label, { marginTop: spacing.xl }]}>Yerel 2 oyunculu</Text>
+            <TextInput
+              style={styles.input}
+              value={p1}
+              onChangeText={setP1}
+              placeholder="Oyuncu 1"
+              placeholderTextColor="rgba(247,241,227,0.4)"
+              returnKeyType="next"
+              blurOnSubmit={false}
+            />
+            <TextInput
+              style={styles.input}
+              value={p2}
+              onChangeText={setP2}
+              placeholder="Oyuncu 2"
+              placeholderTextColor="rgba(247,241,227,0.4)"
+              returnKeyType="done"
+              blurOnSubmit
+              onSubmitEditing={Keyboard.dismiss}
+            />
+            <Pressable
+              style={({ pressed }) => [styles.secondary, pressed && { opacity: 0.9 }]}
+              onPress={() => {
+                Keyboard.dismiss();
+                onStartLocal([p1.trim() || 'Oyuncu 1', p2.trim() || 'Oyuncu 2']);
+              }}
+            >
+              <Text style={styles.secondaryText}>Yerel oyuna başla</Text>
+            </Pressable>
+            <Text style={styles.hint}>Aynı cihazda sıra sıra · hesap gerekmez · çevrimdışı</Text>
+          </Animated.View>
         </Pressable>
-        <Text style={styles.hint}>Aynı cihazda sıra sıra · hesap gerekmez</Text>
-      </Animated.View>
-    </LinearGradient>
+      </LinearGradient>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  flex: { flex: 1 },
   root: {
     flex: 1,
     paddingHorizontal: spacing.xl,
