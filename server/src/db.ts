@@ -4,7 +4,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dataDir = path.join(__dirname, '..', 'data');
+const dataDir = process.env.DATA_DIR
+  ? path.resolve(process.env.DATA_DIR)
+  : path.join(__dirname, '..', 'data');
 fs.mkdirSync(dataDir, { recursive: true });
 
 export const db = new Database(path.join(dataDir, 'harfkule.sqlite'));

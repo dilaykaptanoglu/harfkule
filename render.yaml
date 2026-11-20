@@ -1,0 +1,20 @@
+# Render Blueprint (free web service — ephemeral SQLite; no persistent disk on free)
+# Dashboard: New → Blueprint → repo dilaykaptanoglu/harfkule
+# Branch: cursor/testflight-keyboard-api-839c (until merged) or main
+# After deploy, copy https://harfkule-api.onrender.com into eas.json EXPO_PUBLIC_API_URL
+
+services:
+  - type: web
+    name: harfkule-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATA_DIR
+        value: /data
+      # Do not set PORT — Render injects it; app reads process.env.PORT

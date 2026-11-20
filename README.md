@@ -104,6 +104,12 @@ assets/data/       # turkish-words.json
 eas.json           # EAS iskeleti
 ```
 
-## Production hosting (sonra)
+## Production API hosting
 
-SQLite dosyasını Postgres’e taşıyıp API’yi Railway / Fly.io / Render’da çalıştırın; `PORT` + kalıcı volume/DB; istemcide `EXPO_PUBLIC_API_URL` production URL. EAS build App Store için ayrı adım.
+TestFlight / App Store builds need a public HTTPS API (device cannot use localhost).
+
+1. Deploy `server/` — see [`server/DEPLOY.md`](server/DEPLOY.md) (Fly.io or Render Blueprint via `render.yaml`).
+2. Put the HTTPS URL into `eas.json` → `build.preview.env` and `build.production.env` → `EXPO_PUBLIC_API_URL`.
+3. Rebuild iOS: `npx eas-cli@latest build -p ios --profile production` then `submit`.
+
+**Yerel 2 oyunculu** API’siz / çevrimdışı çalışır.
